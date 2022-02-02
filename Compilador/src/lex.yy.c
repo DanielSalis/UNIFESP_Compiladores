@@ -1963,14 +1963,14 @@ TokenType getToken(void){
  	TokenType currentToken;
  	if (firstTime){ 
 		firstTime = FALSE;
-   	lineno = lineno + 1;
-  	yyin = source;
- 	yyout = listing;
+		lineno = lineno + 1;
+		yyin = source;
+		yyout = listing;
  	}
  	currentToken = yylex();
  	strncpy(tokenString,yytext,MAXTOKENLEN);
   	if (TraceScan) {
-		  if(currentToken != FIM){ 
+		  if(currentToken != END_OF_FILE){ 
     		fprintf(tokenList,"\t%d: ",lineno);
     		printToken(tokenList, currentToken,tokenString);
 		  }

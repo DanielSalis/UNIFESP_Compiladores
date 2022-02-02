@@ -1,193 +1,176 @@
+/****************************************************/
+/* File: util.c                                     */
+/* Utility function implementation                  */
+/* for the TINY compiler                            */
+/* Compiler Construction: Principles and Practice   */
+/* Kenneth C. Louden                                */
+/****************************************************/
+
 #include "globals.h"
 #include "util.h"
 
-
-void printToken(FILE* file, TokenType token, const char* tokenString )
-{ switch (token){ 
-    case IF:            fprintf(file, "Palavra reservada: IF, Lexema: %s\n",tokenString); break;
-    case ELSE:          fprintf(file, "Palavra reservada: ELSE, Lexema: %s\n",tokenString); break;
-    case RETURN:        fprintf(file, "Palavra reservada: RETURN, Lexema: %s\n",tokenString); break;
-    case INT:		        fprintf(file, "Palavra reservada: INT, Lexema: %s\n",tokenString); break;
-    case VOID:	        fprintf(file, "Palavra reservada: VOID, Lexema: %s\n",tokenString); break;
-    case WHILE:         fprintf(file, "Palavra reservada: WHILE, Lexema: %s\n",tokenString); break;
-    case IGL:           fprintf(file, "=\n"); break;
-	  case PEV:           fprintf(file, ";\n"); break;
-	  case APR:           fprintf(file, "(\n"); break;
-	  case FPR:           fprintf(file, ")\n"); break;
-	  case MENOR:         fprintf(file, "<\n"); break;
-    case MENORIGUAL:    fprintf(file, "<=\n"); break;
-    case MAIOR:         fprintf(file, ">\n"); break;
-    case MAIORIGUAL:    fprintf(file, ">=\n"); break;
-    case IGUALIGUAL:    fprintf(file, "==\n"); break;
-	  case DIFERENTE:     fprintf(file, "!=\n"); break;
-	  case VIRGULA:       fprintf(file, ",\n"); break;
-	  case COLCHETEABRE:  fprintf(file, "[\n"); break;
-	  case COLCHETEFECHA: fprintf(file, "]\n"); break;
-	  case CHAVESABRE:    fprintf(file, "{\n"); break;
-	  case CHAVESFECHA:   fprintf(file, "}\n"); break;
-	  case SOM:           fprintf(file, "+\n"); break;
-	  case SUB:           fprintf(file, "-\n"); break;
-	  case MUL:           fprintf(file, "*\n"); break;
-	  case DIV:           fprintf(file, "/\n"); break;
-    case FIM:           fprintf(file, "EOF\n"); break;
-    case NUM:           fprintf(file, "NUM, val= %s\n",tokenString); break;
-    case ID:            fprintf(file, "ID, name= %s\n",tokenString); break;
-    case ERR:           fprintf(file, "Lexema: %s\n",tokenString); break;
-    default: 
-      fprintf(file,"Unknown token: %d\n",token);
+/* Procedure printToken prints a token 
+ * and its lexeme to the listing file
+ */
+void printToken( TokenType token, const char* tokenString )
+{ switch (token)
+  { case IF:
+    case THEN:
+    case ELSE:
+    case END:
+    case REPEAT:
+    case UNTIL:
+    case READ:
+    case WRITE:
+      fprintf(listing,
+         "reserved word: %s\n",tokenString);
+      break;
+    case ASSIGN: fprintf(listing,":=\n"); break;
+    case LT: fprintf(listing,"<\n"); break;
+    case EQ: fprintf(listing,"=\n"); break;
+    case LPAREN: fprintf(listing,"(\n"); break;
+    case RPAREN: fprintf(listing,")\n"); break;
+    case SEMI: fprintf(listing,";\n"); break;
+    case PLUS: fprintf(listing,"+\n"); break;
+    case MINUS: fprintf(listing,"-\n"); break;
+    case TIMES: fprintf(listing,"*\n"); break;
+    case OVER: fprintf(listing,"/\n"); break;
+    case ENDFILE: fprintf(listing,"EOF\n"); break;
+    case NUM:
+      fprintf(listing,
+          "NUM, val= %s\n",tokenString);
+      break;
+    case ID:
+      fprintf(listing,
+          "ID, name= %s\n",tokenString);
+      break;
+    case ERROR:
+      fprintf(listing,
+          "ERROR: %s\n",tokenString);
+      break;
+    default: /* should never happen */
+      fprintf(listing,"Unknown token: %d\n",token);
   }
 }
 
-void aggScope(TreeNode* t, char* scope)
-{
-	int i;
-	while(t != NULL)
-	{
-		for(i = 0; i < MAXCHILDREN; ++i)
-		{
-			t->attr.scope = scope;
-			aggScope(t->child[i], scope);
-		}
-		t = t->sibling; 
-	}
-}
-
-/* A função newStmtNode cria uma nova instrução
- * nó para construção de árvore de sintaxe
+/* Function newStmtNode creates a new statement
+ * node for syntax tree construction
  */
 TreeNode * newStmtNode(StmtKind kind)
 { TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
-  int i=0;
+  int i;
   if (t==NULL)
     fprintf(listing,"Out of memory error at line %d\n",lineno);
   else {
-    for (i=0;i<MAXCHILDREN;i++) 
-        t->child[i] = NULL;
-        t->sibling = NULL;
-        t->nodekind = statementK;
-        t->kind.stmt = kind;
-        t->lineno = lineno;
-        t->attr.scope = "global";
-        t->icTemp = -1;
-        t->paramQt = 0;
-
-
+    for (i=0;i<MAXCHILDREN;i++) t->child[i] = NULL;
+    t->sibling = NULL;
+    t->nodekind = StmtK;
+    t->kind.stmt = kind;
+    t->lineno = lineno;
   }
   return t;
 }
 
-/* A função newExpNode cria uma nova expressão
- * nó para construção de árvore de sintaxe
+/* Function newExpNode creates a new expression 
+ * node for syntax tree construction
  */
 TreeNode * newExpNode(ExpKind kind)
 { TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
-  
-  int i=0;
+  int i;
   if (t==NULL)
     fprintf(listing,"Out of memory error at line %d\n",lineno);
   else {
-    for (i=0;i<MAXCHILDREN;i++){ 
-      t->child[i] = NULL;
-    }
+    for (i=0;i<MAXCHILDREN;i++) t->child[i] = NULL;
     t->sibling = NULL;
-    t->nodekind = expressionK;
+    t->nodekind = ExpK;
     t->kind.exp = kind;
     t->lineno = lineno;
-    t->type = VOID;
-    t->attr.scope = "global";
-    t->icTemp = -1;
-    t->paramQt = 0;
+    t->type = Void;
   }
-
   return t;
 }
 
-/* A função copyString aloca e cria um novo
- * cópia de uma string existente
+/* Function copyString allocates and makes a new
+ * copy of an existing string
  */
 char * copyString(char * s)
 { int n;
   char * t;
-  if (s==NULL) 
-    return NULL;
-  
+  if (s==NULL) return NULL;
   n = strlen(s)+1;
   t = malloc(n);
   if (t==NULL)
     fprintf(listing,"Out of memory error at line %d\n",lineno);
-  else 
-    strcpy(t,s);
+  else strcpy(t,s);
   return t;
 }
 
-/*Uma função copyString aloca e cria um novo
- * cópia de uma string existente
+/* Variable indentno is used by printTree to
+ * store current number of spaces to indent
  */
-static int indentno = 0;
+static indentno = 0;
 
-
+/* macros to increase/decrease indentation */
 #define INDENT indentno+=2
 #define UNINDENT indentno-=2
 
-
+/* printSpaces indents by printing spaces */
 static void printSpaces(void)
 { int i;
   for (i=0;i<indentno;i++)
-    fprintf(synTree," ");
+    fprintf(listing," ");
 }
 
-/* procedimento printTree imprime uma árvore de sintaxe para o
- * arquivo de listagem usando indentação para indicar subárvores
+/* procedure printTree prints a syntax tree to the 
+ * listing file using indentation to indicate subtrees
  */
 void printTree( TreeNode * tree )
-{ 
-  int i;
+{ int i;
   INDENT;
   while (tree != NULL) {
     printSpaces();
-    if (tree->nodekind==statementK)
+    if (tree->nodekind==StmtK)
     { switch (tree->kind.stmt) {
-        case ifK:     fprintf(synTree,"If\n"); break;
-        case whileK:  fprintf(synTree,"While\n"); break;
-	    	case paramK:  fprintf(synTree,"Parametro: %s\n", tree->attr.name); break;
-        case assignK: fprintf(synTree,"Atribuição\n"); break;
-        case varK:    fprintf(synTree,"Variável: %s\n",tree->attr.name); break;
-        case funcK:   fprintf(synTree,"Função %s\n", tree->attr.name); break;
-	    	case callK:   fprintf(synTree,"Chamada de Função: %s \n", tree->attr.name); break;
-	    	case returnK: fprintf(synTree,"Retorno"); break;
-        case argK:    fprintf(synTree,"Argumento: %s\n", tree->attr.name); break;
-        default:      fprintf(synTree,"Unknown ExpNode kind 1\n"); break;
-
+        case IfK:
+          fprintf(listing,"If\n");
+          break;
+        case RepeatK:
+          fprintf(listing,"Repeat\n");
+          break;
+        case AssignK:
+          fprintf(listing,"Assign to: %s\n",tree->attr.name);
+          break;
+        case ReadK:
+          fprintf(listing,"Read: %s\n",tree->attr.name);
+          break;
+        case WriteK:
+          fprintf(listing,"Write\n");
+          break;
+        default:
+          fprintf(listing,"Unknown ExpNode kind\n");
+          break;
       }
     }
-    else if (tree->nodekind==expressionK){
-
-      switch (tree->kind.exp) {
-        case opK:         fprintf(synTree,"Op: ");
-                          printToken(synTree, tree->attr.op,"\0");
-                          break;
-        case constK:      fprintf(synTree,"Const: %d\n",tree->attr.val);
-                          break;
-        case idK:         fprintf(synTree,"Id: %s\n",tree->attr.name);
-                          break;
-		    case vectK:       fprintf(synTree,"Vetor: %s\n",tree->attr.name);
-                          break;
-		    case vectIndexK:  fprintf(synTree,"Indíce: [%d]\n",tree->attr.val);
-                          break;
-        case typeK:       fprintf(synTree,"Type %s\n",tree->attr.name);
-                          break;
-        default:          fprintf(synTree,"Unknown ExpNode kind 2\n");
-                          break;
+    else if (tree->nodekind==ExpK)
+    { switch (tree->kind.exp) {
+        case OpK:
+          fprintf(listing,"Op: ");
+          printToken(tree->attr.op,"\0");
+          break;
+        case ConstK:
+          fprintf(listing,"Const: %d\n",tree->attr.val);
+          break;
+        case IdK:
+          fprintf(listing,"Id: %s\n",tree->attr.name);
+          break;
+        default:
+          fprintf(listing,"Unknown ExpNode kind\n");
+          break;
       }
     }
-    else 
-      fprintf(synTree,"Unknown node kind 3\n");
-
-    for (i = 0; i < MAXCHILDREN; i++){
-      if(tree->child[i] != NULL)
-        printTree(tree->child[i]);
-    }
-    
+    else fprintf(listing,"Unknown node kind\n");
+    for (i=0;i<MAXCHILDREN;i++)
+         printTree(tree->child[i]);
     tree = tree->sibling;
   }
   UNINDENT;

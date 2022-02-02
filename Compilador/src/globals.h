@@ -1,3 +1,11 @@
+/****************************************************/
+/* File: globals.h                                  */
+/* Global types and vars for TINY compiler          */
+/* must come before other include files             */
+/* Compiler Construction: Principles and Practice   */
+/* Kenneth C. Louden                                */
+/****************************************************/
+
 #ifndef _GLOBALS_H_
 #define _GLOBALS_H_
 
@@ -5,15 +13,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include <stdbool.h>
-
-#ifndef YYPARSER
-
-#include "scanner_table.h"
-
-#define ENDFILE 0
-
-#endif
 
 #ifndef FALSE
 #define FALSE 0
@@ -23,88 +22,83 @@
 #define TRUE 1
 #endif
 
+/* MAXRESERVED = the number of reserved words */
 #define MAXRESERVED 8
 
-typedef int TokenType;
+typedef enum 
+    /* book-keeping tokens */
+   {ENDFILE,ERROR,
+    /* reserved words */
+    IF,THEN,ELSE,END,REPEAT,UNTIL,READ,WRITE,
+    /* multicharacter tokens */
+    ID,NUM,
+    /* special symbols */
+    ASSIGN,EQ,LT,PLUS,MINUS,TIMES,OVER,LPAREN,RPAREN,SEMI
+   } TokenType;
 
-extern FILE *source; 
-extern FILE *listing; 
-extern FILE *tokenList; 
-extern FILE *symTab;
-extern FILE *synTree;
-extern FILE *intermediateCode;
+extern FILE* source; /* source code text file */
+extern FILE* listing; /* listing output text file */
+extern FILE* code; /* code text file for TM simulator */
 
-extern int  lineno; 
+extern int lineno; /* source line number for listing */
 
-typedef enum {statementK,expressionK
-} NodeKind;
-	
-typedef enum {ifK, whileK, assignK, varK, funcK, callK, returnK, argK, paramK
-} StmtKind;
-	
-typedef enum {opK, constK, idK, vectK, vectIndexK, typeK,
-} ExpKind;
+/**************************************************/
+/***********   Syntax tree for parsing ************/
+/**************************************************/
 
-typedef enum { voidt, integert,booleant
-} ExpType;
+typedef enum {StmtK,ExpK} NodeKind;
+typedef enum {IfK,RepeatK,AssignK,ReadK,WriteK} StmtKind;
+typedef enum {OpK,ConstK,IdK} ExpKind;
+
+/* ExpType is used for type checking */
+typedef enum {Void,Integer,Boolean} ExpType;
 
 #define MAXCHILDREN 3
 
-typedef struct treeNode{
-	struct treeNode * child[MAXCHILDREN];
-    struct treeNode * sibling;
-    int lineno;
-    NodeKind nodekind;
-    union 	{ 
-		 		StmtKind stmt; 
-				ExpKind exp;
-			} kind;
+typedef struct treeNode
+   { struct treeNode * child[MAXCHILDREN];
+     struct treeNode * sibling;
+     int lineno;
+     NodeKind nodekind;
+     union { StmtKind stmt; ExpKind exp;} kind;
+     union { TokenType op;
+             int val;
+             char * name; } attr;
+     ExpType type; /* for type checking of exps */
+   } TreeNode;
 
-    struct	{	
-		 		TokenType op;
-				int  val;
-        		int  len;
-        		char* name; 
-        		char* scope;	
-			} attr;
-    ExpType type; /* para verificar os tipos*/
-	int icTemp; /* Armazena o registro temporário do código intermediário */
-	int idxReg; /* Armazena o registro de índice para uma instrução de armazenamento de uma matriz */
-	int paramQt; /* Armazene o número de parâmetros de uma função apenas para funcK. Se não for necessário, remova e remova de utils.c*/
-   }TreeNode;
+/**************************************************/
+/***********   Flags for tracing       ************/
+/**************************************************/
 
-
-
-/* EchoSource = TRUE, faz com que o programa fonte seja 'ecoado' no arquivo de listagem
-                com números de linha durante a análise*/
+/* EchoSource = TRUE causes the source program to
+ * be echoed to the listing file with line numbers
+ * during parsing
+ */
 extern int EchoSource;
 
-/* 
-TraceScan = TRUE, faz com que as informações do token sejam impressas no arquivo de listagem à medida 
-     que cada token é reconhecido pelo scanner
+/* TraceScan = TRUE causes token information to be
+ * printed to the listing file as each token is
+ * recognized by the scanner
  */
 extern int TraceScan;
 
-/* TraceParse = TRUE ,faz com que a árvore de sintaxe seja impressa 
-                no arquivo de listagem de forma linearizada
+/* TraceParse = TRUE causes the syntax tree to be
+ * printed to the listing file in linearized form
+ * (using indents for children)
  */
 extern int TraceParse;
 
-/* TraceAnalyze = TRUE faz com que as inserções e pesquisas na tabela de símbolos
-                    sejam relatadas ao arquivo de listagem
+/* TraceAnalyze = TRUE causes symbol table inserts
+ * and lookups to be reported to the listing file
  */
 extern int TraceAnalyze;
 
-/* TraceCode = TRUE, faz com que comentários sejam gravados no arquivo de código conforme o código é gerado*/
+/* TraceCode = TRUE causes comments to be written
+ * to the TM code file as code is generated
+ */
 extern int TraceCode;
 
-/* Error = TRUE, impede mais passagens se ocorrer um erro */
-int Error; 
-
-/* Função responsável por converter um valor inteiro em uma string */
-char *convertIntChar(int x);
-
-/* Função que conta o número de parâmetros de uma função*/
-int paramCounter(TreeNode *t);
-
+/* Error = TRUE prevents further passes if an error occurs */
+extern int Error; 
 #endif

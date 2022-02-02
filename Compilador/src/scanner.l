@@ -80,28 +80,20 @@ void abrirArq(){
 
 int yywrap () {  };
 
-TokenType getToken(void){ 
-	static int firstTime = TRUE;
- 	TokenType currentToken;
- 	if (firstTime){ 
-		firstTime = FALSE;
-   	lineno = lineno + 1;
-  	yyin = source;
- 	yyout = listing;
- 	}
- 	currentToken = yylex();
- 	strncpy(tokenString,yytext,MAXTOKENLEN);
-  	if (TraceScan) {
-		  if(currentToken != FIM){ 
-    		fprintf(tokenList,"\t%d: ",lineno);
-    		printToken(tokenList, currentToken,tokenString);
-		  }
-	 }
-	 
-	if(currentToken == ERR){
-		printf("\nERRO LÉXICO. Linha: %d, ", lineno);
-		printToken(listing, currentToken,tokenString);
-		Error = TRUE;
-	}
-	return currentToken;
+TokenType getToken(void)
+{ static int firstTime = TRUE;
+  TokenType currentToken;
+  if (firstTime)
+  { firstTime = FALSE;
+    lineno++;
+    yyin = source;
+    yyout = listing;
+  }
+  currentToken = yylex();
+  strncpy(tokenString,yytext,MAXTOKENLEN);
+  if (TraceScan) {
+    fprintf(listing,"\t%d: ",lineno);
+    printToken(currentToken,tokenString);
+  }
+  return currentToken;
 }
