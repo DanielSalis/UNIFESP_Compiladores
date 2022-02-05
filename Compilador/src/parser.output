@@ -1,0 +1,1556 @@
+Terminais sem uso na gramática
+
+    ERROR
+    END
+
+
+Estado 120 conflitos: 1 de deslocamento/redução
+
+
+Gramática
+
+    0 $accept: program $end
+
+    1 program: declaracao_lista
+
+    2 declaracao_lista: declaracao_lista declaracao
+    3                 | declaracao
+
+    4 declaracao: var_declaracao
+    5           | fun_declaracao
+
+    6 id: ID
+
+    7 var_declaracao: INT id SEMICOLON
+    8               | INT id OPEN_BRACKET num CLOSE_BRACKET SEMICOLON
+    9               | VOID id SEMICOLON
+   10               | VOID id OPEN_BRACKET num CLOSE_BRACKET SEMICOLON
+
+   11 num: NUM
+
+   12 fun_declaracao: INT id OPEN_PAREN params CLOSE_PAREN composto_decl
+   13               | VOID id OPEN_PAREN params CLOSE_PAREN composto_decl
+
+   14 params: param_lista
+   15       | VOID
+
+   16 param_lista: param_lista COMMA param
+   17            | param
+
+   18 param: INT id
+   19      | INT id OPEN_BRACKET CLOSE_BRACKET
+   20      | VOID id
+   21      | VOID id OPEN_BRACKET CLOSE_BRACKET
+
+   22 composto_decl: OPEN_KEYS local_declaracoes statement_lista CLOSE_KEYS
+   23              | OPEN_KEYS local_declaracoes CLOSE_KEYS
+   24              | OPEN_KEYS statement_lista CLOSE_KEYS
+   25              | OPEN_KEYS CLOSE_KEYS
+
+   26 local_declaracoes: local_declaracoes var_declaracao
+   27                  | var_declaracao
+
+   28 statement_lista: statement_lista statement
+   29                | statement
+
+   30 statement: expressao_decl
+   31          | composto_decl
+   32          | selecao_decl
+   33          | iteracao_decl
+   34          | retorno_decl
+
+   35 expressao_decl: expressao SEMICOLON
+   36               | SEMICOLON
+
+   37 selecao_decl: IF OPEN_PAREN expressao CLOSE_PAREN statement
+   38             | IF OPEN_PAREN expressao CLOSE_PAREN statement ELSE statement
+
+   39 iteracao_decl: WHILE OPEN_PAREN expressao CLOSE_PAREN statement
+
+   40 retorno_decl: RETURN SEMICOLON
+   41             | RETURN expressao SEMICOLON
+
+   42 expressao: var ASSIGN expressao
+   43          | simples_expressao
+
+   44 var: id
+   45    | id OPEN_BRACKET expressao CLOSE_BRACKET
+
+   46 simples_expressao: soma_expressao relacional soma_expressao
+   47                  | soma_expressao
+
+   48 relacional: LESS_THAN_EQUAL
+   49           | LESS_THAN
+   50           | GREATER_THAN
+   51           | GREATER_THAN_EQUAL
+   52           | EQUAL
+   53           | NOT_EQUAL
+
+   54 soma_expressao: soma_expressao soma termo
+   55               | termo
+
+   56 soma: PLUS
+   57     | MINUS
+
+   58 termo: termo mult fator
+   59      | fator
+
+   60 mult: MULTIPLYER
+   61     | DIVIDER
+
+   62 fator: OPEN_PAREN expressao CLOSE_PAREN
+   63      | var
+   64      | ativacao
+   65      | num
+
+   66 ativacao: id OPEN_PAREN arg_lista CLOSE_PAREN
+   67         | id OPEN_PAREN CLOSE_PAREN
+
+   68 arg_lista: arg_lista COMMA expressao
+   69          | expressao
+
+
+Terminais, com as regras onde eles aparecem
+
+    $end (0) 0
+    error (256)
+    IF (258) 37 38
+    ELSE (259) 38
+    RETURN (260) 40 41
+    INT (261) 7 8 12 18 19
+    VOID (262) 9 10 13 15 20 21
+    WHILE (263) 39
+    ID (264) 6
+    NUM (265) 11
+    ASSIGN (266) 42
+    LESS_THAN (267) 49
+    LESS_THAN_EQUAL (268) 48
+    GREATER_THAN (269) 50
+    GREATER_THAN_EQUAL (270) 51
+    EQUAL (271) 52
+    NOT_EQUAL (272) 53
+    SEMICOLON (273) 7 8 9 10 35 36 40 41
+    COMMA (274) 16 68
+    OPEN_PAREN (275) 12 13 37 38 39 62 66 67
+    CLOSE_PAREN (276) 12 13 37 38 39 62 66 67
+    OPEN_BRACKET (277) 8 10 19 21 45
+    CLOSE_BRACKET (278) 8 10 19 21 45
+    OPEN_KEYS (279) 22 23 24 25
+    CLOSE_KEYS (280) 22 23 24 25
+    PLUS (281) 56
+    MINUS (282) 57
+    MULTIPLYER (283) 60
+    DIVIDER (284) 61
+    ERROR (285)
+    END (286)
+
+
+Não terminais com as regras onde eles aparecem
+
+    $accept (32)
+        à esquerda: 0
+    program (33)
+        à esquerda: 1
+        à direita: 0
+    declaracao_lista (34)
+        à esquerda: 2 3
+        à direita: 1 2
+    declaracao (35)
+        à esquerda: 4 5
+        à direita: 2 3
+    id (36)
+        à esquerda: 6
+        à direita: 7 8 9 10 12 13 18 19 20 21 44 45 66 67
+    var_declaracao (37)
+        à esquerda: 7 8 9 10
+        à direita: 4 26 27
+    num (38)
+        à esquerda: 11
+        à direita: 8 10 65
+    fun_declaracao (39)
+        à esquerda: 12 13
+        à direita: 5
+    params (40)
+        à esquerda: 14 15
+        à direita: 12 13
+    param_lista (41)
+        à esquerda: 16 17
+        à direita: 14 16
+    param (42)
+        à esquerda: 18 19 20 21
+        à direita: 16 17
+    composto_decl (43)
+        à esquerda: 22 23 24 25
+        à direita: 12 13 31
+    local_declaracoes (44)
+        à esquerda: 26 27
+        à direita: 22 23 26
+    statement_lista (45)
+        à esquerda: 28 29
+        à direita: 22 24 28
+    statement (46)
+        à esquerda: 30 31 32 33 34
+        à direita: 28 29 37 38 39
+    expressao_decl (47)
+        à esquerda: 35 36
+        à direita: 30
+    selecao_decl (48)
+        à esquerda: 37 38
+        à direita: 32
+    iteracao_decl (49)
+        à esquerda: 39
+        à direita: 33
+    retorno_decl (50)
+        à esquerda: 40 41
+        à direita: 34
+    expressao (51)
+        à esquerda: 42 43
+        à direita: 35 37 38 39 41 42 45 62 68 69
+    var (52)
+        à esquerda: 44 45
+        à direita: 42 63
+    simples_expressao (53)
+        à esquerda: 46 47
+        à direita: 43
+    relacional (54)
+        à esquerda: 48 49 50 51 52 53
+        à direita: 46
+    soma_expressao (55)
+        à esquerda: 54 55
+        à direita: 46 47 54
+    soma (56)
+        à esquerda: 56 57
+        à direita: 54
+    termo (57)
+        à esquerda: 58 59
+        à direita: 54 55 58
+    mult (58)
+        à esquerda: 60 61
+        à direita: 58
+    fator (59)
+        à esquerda: 62 63 64 65
+        à direita: 58 59
+    ativacao (60)
+        à esquerda: 66 67
+        à direita: 64
+    arg_lista (61)
+        à esquerda: 68 69
+        à direita: 66 68
+
+
+Estado 0
+
+    0 $accept: . program $end
+
+    INT   deslocar, e ir ao estado 1
+    VOID  deslocar, e ir ao estado 2
+
+    program           ir ao estado 3
+    declaracao_lista  ir ao estado 4
+    declaracao        ir ao estado 5
+    var_declaracao    ir ao estado 6
+    fun_declaracao    ir ao estado 7
+
+
+Estado 1
+
+    7 var_declaracao: INT . id SEMICOLON
+    8               | INT . id OPEN_BRACKET num CLOSE_BRACKET SEMICOLON
+   12 fun_declaracao: INT . id OPEN_PAREN params CLOSE_PAREN composto_decl
+
+    ID  deslocar, e ir ao estado 8
+
+    id  ir ao estado 9
+
+
+Estado 2
+
+    9 var_declaracao: VOID . id SEMICOLON
+   10               | VOID . id OPEN_BRACKET num CLOSE_BRACKET SEMICOLON
+   13 fun_declaracao: VOID . id OPEN_PAREN params CLOSE_PAREN composto_decl
+
+    ID  deslocar, e ir ao estado 8
+
+    id  ir ao estado 10
+
+
+Estado 3
+
+    0 $accept: program . $end
+
+    $end  deslocar, e ir ao estado 11
+
+
+Estado 4
+
+    1 program: declaracao_lista .
+    2 declaracao_lista: declaracao_lista . declaracao
+
+    INT   deslocar, e ir ao estado 1
+    VOID  deslocar, e ir ao estado 2
+
+    $padrão  reduzir usando a regra 1 (program)
+
+    declaracao      ir ao estado 12
+    var_declaracao  ir ao estado 6
+    fun_declaracao  ir ao estado 7
+
+
+Estado 5
+
+    3 declaracao_lista: declaracao .
+
+    $padrão  reduzir usando a regra 3 (declaracao_lista)
+
+
+Estado 6
+
+    4 declaracao: var_declaracao .
+
+    $padrão  reduzir usando a regra 4 (declaracao)
+
+
+Estado 7
+
+    5 declaracao: fun_declaracao .
+
+    $padrão  reduzir usando a regra 5 (declaracao)
+
+
+Estado 8
+
+    6 id: ID .
+
+    $padrão  reduzir usando a regra 6 (id)
+
+
+Estado 9
+
+    7 var_declaracao: INT id . SEMICOLON
+    8               | INT id . OPEN_BRACKET num CLOSE_BRACKET SEMICOLON
+   12 fun_declaracao: INT id . OPEN_PAREN params CLOSE_PAREN composto_decl
+
+    SEMICOLON     deslocar, e ir ao estado 13
+    OPEN_PAREN    deslocar, e ir ao estado 14
+    OPEN_BRACKET  deslocar, e ir ao estado 15
+
+
+Estado 10
+
+    9 var_declaracao: VOID id . SEMICOLON
+   10               | VOID id . OPEN_BRACKET num CLOSE_BRACKET SEMICOLON
+   13 fun_declaracao: VOID id . OPEN_PAREN params CLOSE_PAREN composto_decl
+
+    SEMICOLON     deslocar, e ir ao estado 16
+    OPEN_PAREN    deslocar, e ir ao estado 17
+    OPEN_BRACKET  deslocar, e ir ao estado 18
+
+
+Estado 11
+
+    0 $accept: program $end .
+
+    $padrão  aceitar
+
+
+Estado 12
+
+    2 declaracao_lista: declaracao_lista declaracao .
+
+    $padrão  reduzir usando a regra 2 (declaracao_lista)
+
+
+Estado 13
+
+    7 var_declaracao: INT id SEMICOLON .
+
+    $padrão  reduzir usando a regra 7 (var_declaracao)
+
+
+Estado 14
+
+   12 fun_declaracao: INT id OPEN_PAREN . params CLOSE_PAREN composto_decl
+
+    INT   deslocar, e ir ao estado 19
+    VOID  deslocar, e ir ao estado 20
+
+    params       ir ao estado 21
+    param_lista  ir ao estado 22
+    param        ir ao estado 23
+
+
+Estado 15
+
+    8 var_declaracao: INT id OPEN_BRACKET . num CLOSE_BRACKET SEMICOLON
+
+    NUM  deslocar, e ir ao estado 24
+
+    num  ir ao estado 25
+
+
+Estado 16
+
+    9 var_declaracao: VOID id SEMICOLON .
+
+    $padrão  reduzir usando a regra 9 (var_declaracao)
+
+
+Estado 17
+
+   13 fun_declaracao: VOID id OPEN_PAREN . params CLOSE_PAREN composto_decl
+
+    INT   deslocar, e ir ao estado 19
+    VOID  deslocar, e ir ao estado 20
+
+    params       ir ao estado 26
+    param_lista  ir ao estado 22
+    param        ir ao estado 23
+
+
+Estado 18
+
+   10 var_declaracao: VOID id OPEN_BRACKET . num CLOSE_BRACKET SEMICOLON
+
+    NUM  deslocar, e ir ao estado 24
+
+    num  ir ao estado 27
+
+
+Estado 19
+
+   18 param: INT . id
+   19      | INT . id OPEN_BRACKET CLOSE_BRACKET
+
+    ID  deslocar, e ir ao estado 8
+
+    id  ir ao estado 28
+
+
+Estado 20
+
+   15 params: VOID .
+   20 param: VOID . id
+   21      | VOID . id OPEN_BRACKET CLOSE_BRACKET
+
+    ID  deslocar, e ir ao estado 8
+
+    $padrão  reduzir usando a regra 15 (params)
+
+    id  ir ao estado 29
+
+
+Estado 21
+
+   12 fun_declaracao: INT id OPEN_PAREN params . CLOSE_PAREN composto_decl
+
+    CLOSE_PAREN  deslocar, e ir ao estado 30
+
+
+Estado 22
+
+   14 params: param_lista .
+   16 param_lista: param_lista . COMMA param
+
+    COMMA  deslocar, e ir ao estado 31
+
+    $padrão  reduzir usando a regra 14 (params)
+
+
+Estado 23
+
+   17 param_lista: param .
+
+    $padrão  reduzir usando a regra 17 (param_lista)
+
+
+Estado 24
+
+   11 num: NUM .
+
+    $padrão  reduzir usando a regra 11 (num)
+
+
+Estado 25
+
+    8 var_declaracao: INT id OPEN_BRACKET num . CLOSE_BRACKET SEMICOLON
+
+    CLOSE_BRACKET  deslocar, e ir ao estado 32
+
+
+Estado 26
+
+   13 fun_declaracao: VOID id OPEN_PAREN params . CLOSE_PAREN composto_decl
+
+    CLOSE_PAREN  deslocar, e ir ao estado 33
+
+
+Estado 27
+
+   10 var_declaracao: VOID id OPEN_BRACKET num . CLOSE_BRACKET SEMICOLON
+
+    CLOSE_BRACKET  deslocar, e ir ao estado 34
+
+
+Estado 28
+
+   18 param: INT id .
+   19      | INT id . OPEN_BRACKET CLOSE_BRACKET
+
+    OPEN_BRACKET  deslocar, e ir ao estado 35
+
+    $padrão  reduzir usando a regra 18 (param)
+
+
+Estado 29
+
+   20 param: VOID id .
+   21      | VOID id . OPEN_BRACKET CLOSE_BRACKET
+
+    OPEN_BRACKET  deslocar, e ir ao estado 36
+
+    $padrão  reduzir usando a regra 20 (param)
+
+
+Estado 30
+
+   12 fun_declaracao: INT id OPEN_PAREN params CLOSE_PAREN . composto_decl
+
+    OPEN_KEYS  deslocar, e ir ao estado 37
+
+    composto_decl  ir ao estado 38
+
+
+Estado 31
+
+   16 param_lista: param_lista COMMA . param
+
+    INT   deslocar, e ir ao estado 19
+    VOID  deslocar, e ir ao estado 39
+
+    param  ir ao estado 40
+
+
+Estado 32
+
+    8 var_declaracao: INT id OPEN_BRACKET num CLOSE_BRACKET . SEMICOLON
+
+    SEMICOLON  deslocar, e ir ao estado 41
+
+
+Estado 33
+
+   13 fun_declaracao: VOID id OPEN_PAREN params CLOSE_PAREN . composto_decl
+
+    OPEN_KEYS  deslocar, e ir ao estado 37
+
+    composto_decl  ir ao estado 42
+
+
+Estado 34
+
+   10 var_declaracao: VOID id OPEN_BRACKET num CLOSE_BRACKET . SEMICOLON
+
+    SEMICOLON  deslocar, e ir ao estado 43
+
+
+Estado 35
+
+   19 param: INT id OPEN_BRACKET . CLOSE_BRACKET
+
+    CLOSE_BRACKET  deslocar, e ir ao estado 44
+
+
+Estado 36
+
+   21 param: VOID id OPEN_BRACKET . CLOSE_BRACKET
+
+    CLOSE_BRACKET  deslocar, e ir ao estado 45
+
+
+Estado 37
+
+   22 composto_decl: OPEN_KEYS . local_declaracoes statement_lista CLOSE_KEYS
+   23              | OPEN_KEYS . local_declaracoes CLOSE_KEYS
+   24              | OPEN_KEYS . statement_lista CLOSE_KEYS
+   25              | OPEN_KEYS . CLOSE_KEYS
+
+    IF          deslocar, e ir ao estado 46
+    RETURN      deslocar, e ir ao estado 47
+    INT         deslocar, e ir ao estado 48
+    VOID        deslocar, e ir ao estado 49
+    WHILE       deslocar, e ir ao estado 50
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    SEMICOLON   deslocar, e ir ao estado 51
+    OPEN_PAREN  deslocar, e ir ao estado 52
+    OPEN_KEYS   deslocar, e ir ao estado 37
+    CLOSE_KEYS  deslocar, e ir ao estado 53
+
+    id                 ir ao estado 54
+    var_declaracao     ir ao estado 55
+    num                ir ao estado 56
+    composto_decl      ir ao estado 57
+    local_declaracoes  ir ao estado 58
+    statement_lista    ir ao estado 59
+    statement          ir ao estado 60
+    expressao_decl     ir ao estado 61
+    selecao_decl       ir ao estado 62
+    iteracao_decl      ir ao estado 63
+    retorno_decl       ir ao estado 64
+    expressao          ir ao estado 65
+    var                ir ao estado 66
+    simples_expressao  ir ao estado 67
+    soma_expressao     ir ao estado 68
+    termo              ir ao estado 69
+    fator              ir ao estado 70
+    ativacao           ir ao estado 71
+
+
+Estado 38
+
+   12 fun_declaracao: INT id OPEN_PAREN params CLOSE_PAREN composto_decl .
+
+    $padrão  reduzir usando a regra 12 (fun_declaracao)
+
+
+Estado 39
+
+   20 param: VOID . id
+   21      | VOID . id OPEN_BRACKET CLOSE_BRACKET
+
+    ID  deslocar, e ir ao estado 8
+
+    id  ir ao estado 29
+
+
+Estado 40
+
+   16 param_lista: param_lista COMMA param .
+
+    $padrão  reduzir usando a regra 16 (param_lista)
+
+
+Estado 41
+
+    8 var_declaracao: INT id OPEN_BRACKET num CLOSE_BRACKET SEMICOLON .
+
+    $padrão  reduzir usando a regra 8 (var_declaracao)
+
+
+Estado 42
+
+   13 fun_declaracao: VOID id OPEN_PAREN params CLOSE_PAREN composto_decl .
+
+    $padrão  reduzir usando a regra 13 (fun_declaracao)
+
+
+Estado 43
+
+   10 var_declaracao: VOID id OPEN_BRACKET num CLOSE_BRACKET SEMICOLON .
+
+    $padrão  reduzir usando a regra 10 (var_declaracao)
+
+
+Estado 44
+
+   19 param: INT id OPEN_BRACKET CLOSE_BRACKET .
+
+    $padrão  reduzir usando a regra 19 (param)
+
+
+Estado 45
+
+   21 param: VOID id OPEN_BRACKET CLOSE_BRACKET .
+
+    $padrão  reduzir usando a regra 21 (param)
+
+
+Estado 46
+
+   37 selecao_decl: IF . OPEN_PAREN expressao CLOSE_PAREN statement
+   38             | IF . OPEN_PAREN expressao CLOSE_PAREN statement ELSE statement
+
+    OPEN_PAREN  deslocar, e ir ao estado 72
+
+
+Estado 47
+
+   40 retorno_decl: RETURN . SEMICOLON
+   41             | RETURN . expressao SEMICOLON
+
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    SEMICOLON   deslocar, e ir ao estado 73
+    OPEN_PAREN  deslocar, e ir ao estado 52
+
+    id                 ir ao estado 54
+    num                ir ao estado 56
+    expressao          ir ao estado 74
+    var                ir ao estado 66
+    simples_expressao  ir ao estado 67
+    soma_expressao     ir ao estado 68
+    termo              ir ao estado 69
+    fator              ir ao estado 70
+    ativacao           ir ao estado 71
+
+
+Estado 48
+
+    7 var_declaracao: INT . id SEMICOLON
+    8               | INT . id OPEN_BRACKET num CLOSE_BRACKET SEMICOLON
+
+    ID  deslocar, e ir ao estado 8
+
+    id  ir ao estado 75
+
+
+Estado 49
+
+    9 var_declaracao: VOID . id SEMICOLON
+   10               | VOID . id OPEN_BRACKET num CLOSE_BRACKET SEMICOLON
+
+    ID  deslocar, e ir ao estado 8
+
+    id  ir ao estado 76
+
+
+Estado 50
+
+   39 iteracao_decl: WHILE . OPEN_PAREN expressao CLOSE_PAREN statement
+
+    OPEN_PAREN  deslocar, e ir ao estado 77
+
+
+Estado 51
+
+   36 expressao_decl: SEMICOLON .
+
+    $padrão  reduzir usando a regra 36 (expressao_decl)
+
+
+Estado 52
+
+   62 fator: OPEN_PAREN . expressao CLOSE_PAREN
+
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    OPEN_PAREN  deslocar, e ir ao estado 52
+
+    id                 ir ao estado 54
+    num                ir ao estado 56
+    expressao          ir ao estado 78
+    var                ir ao estado 66
+    simples_expressao  ir ao estado 67
+    soma_expressao     ir ao estado 68
+    termo              ir ao estado 69
+    fator              ir ao estado 70
+    ativacao           ir ao estado 71
+
+
+Estado 53
+
+   25 composto_decl: OPEN_KEYS CLOSE_KEYS .
+
+    $padrão  reduzir usando a regra 25 (composto_decl)
+
+
+Estado 54
+
+   44 var: id .
+   45    | id . OPEN_BRACKET expressao CLOSE_BRACKET
+   66 ativacao: id . OPEN_PAREN arg_lista CLOSE_PAREN
+   67         | id . OPEN_PAREN CLOSE_PAREN
+
+    OPEN_PAREN    deslocar, e ir ao estado 79
+    OPEN_BRACKET  deslocar, e ir ao estado 80
+
+    $padrão  reduzir usando a regra 44 (var)
+
+
+Estado 55
+
+   27 local_declaracoes: var_declaracao .
+
+    $padrão  reduzir usando a regra 27 (local_declaracoes)
+
+
+Estado 56
+
+   65 fator: num .
+
+    $padrão  reduzir usando a regra 65 (fator)
+
+
+Estado 57
+
+   31 statement: composto_decl .
+
+    $padrão  reduzir usando a regra 31 (statement)
+
+
+Estado 58
+
+   22 composto_decl: OPEN_KEYS local_declaracoes . statement_lista CLOSE_KEYS
+   23              | OPEN_KEYS local_declaracoes . CLOSE_KEYS
+   26 local_declaracoes: local_declaracoes . var_declaracao
+
+    IF          deslocar, e ir ao estado 46
+    RETURN      deslocar, e ir ao estado 47
+    INT         deslocar, e ir ao estado 48
+    VOID        deslocar, e ir ao estado 49
+    WHILE       deslocar, e ir ao estado 50
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    SEMICOLON   deslocar, e ir ao estado 51
+    OPEN_PAREN  deslocar, e ir ao estado 52
+    OPEN_KEYS   deslocar, e ir ao estado 37
+    CLOSE_KEYS  deslocar, e ir ao estado 81
+
+    id                 ir ao estado 54
+    var_declaracao     ir ao estado 82
+    num                ir ao estado 56
+    composto_decl      ir ao estado 57
+    statement_lista    ir ao estado 83
+    statement          ir ao estado 60
+    expressao_decl     ir ao estado 61
+    selecao_decl       ir ao estado 62
+    iteracao_decl      ir ao estado 63
+    retorno_decl       ir ao estado 64
+    expressao          ir ao estado 65
+    var                ir ao estado 66
+    simples_expressao  ir ao estado 67
+    soma_expressao     ir ao estado 68
+    termo              ir ao estado 69
+    fator              ir ao estado 70
+    ativacao           ir ao estado 71
+
+
+Estado 59
+
+   24 composto_decl: OPEN_KEYS statement_lista . CLOSE_KEYS
+   28 statement_lista: statement_lista . statement
+
+    IF          deslocar, e ir ao estado 46
+    RETURN      deslocar, e ir ao estado 47
+    WHILE       deslocar, e ir ao estado 50
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    SEMICOLON   deslocar, e ir ao estado 51
+    OPEN_PAREN  deslocar, e ir ao estado 52
+    OPEN_KEYS   deslocar, e ir ao estado 37
+    CLOSE_KEYS  deslocar, e ir ao estado 84
+
+    id                 ir ao estado 54
+    num                ir ao estado 56
+    composto_decl      ir ao estado 57
+    statement          ir ao estado 85
+    expressao_decl     ir ao estado 61
+    selecao_decl       ir ao estado 62
+    iteracao_decl      ir ao estado 63
+    retorno_decl       ir ao estado 64
+    expressao          ir ao estado 65
+    var                ir ao estado 66
+    simples_expressao  ir ao estado 67
+    soma_expressao     ir ao estado 68
+    termo              ir ao estado 69
+    fator              ir ao estado 70
+    ativacao           ir ao estado 71
+
+
+Estado 60
+
+   29 statement_lista: statement .
+
+    $padrão  reduzir usando a regra 29 (statement_lista)
+
+
+Estado 61
+
+   30 statement: expressao_decl .
+
+    $padrão  reduzir usando a regra 30 (statement)
+
+
+Estado 62
+
+   32 statement: selecao_decl .
+
+    $padrão  reduzir usando a regra 32 (statement)
+
+
+Estado 63
+
+   33 statement: iteracao_decl .
+
+    $padrão  reduzir usando a regra 33 (statement)
+
+
+Estado 64
+
+   34 statement: retorno_decl .
+
+    $padrão  reduzir usando a regra 34 (statement)
+
+
+Estado 65
+
+   35 expressao_decl: expressao . SEMICOLON
+
+    SEMICOLON  deslocar, e ir ao estado 86
+
+
+Estado 66
+
+   42 expressao: var . ASSIGN expressao
+   63 fator: var .
+
+    ASSIGN  deslocar, e ir ao estado 87
+
+    $padrão  reduzir usando a regra 63 (fator)
+
+
+Estado 67
+
+   43 expressao: simples_expressao .
+
+    $padrão  reduzir usando a regra 43 (expressao)
+
+
+Estado 68
+
+   46 simples_expressao: soma_expressao . relacional soma_expressao
+   47                  | soma_expressao .
+   54 soma_expressao: soma_expressao . soma termo
+
+    LESS_THAN           deslocar, e ir ao estado 88
+    LESS_THAN_EQUAL     deslocar, e ir ao estado 89
+    GREATER_THAN        deslocar, e ir ao estado 90
+    GREATER_THAN_EQUAL  deslocar, e ir ao estado 91
+    EQUAL               deslocar, e ir ao estado 92
+    NOT_EQUAL           deslocar, e ir ao estado 93
+    PLUS                deslocar, e ir ao estado 94
+    MINUS               deslocar, e ir ao estado 95
+
+    $padrão  reduzir usando a regra 47 (simples_expressao)
+
+    relacional  ir ao estado 96
+    soma        ir ao estado 97
+
+
+Estado 69
+
+   55 soma_expressao: termo .
+   58 termo: termo . mult fator
+
+    MULTIPLYER  deslocar, e ir ao estado 98
+    DIVIDER     deslocar, e ir ao estado 99
+
+    $padrão  reduzir usando a regra 55 (soma_expressao)
+
+    mult  ir ao estado 100
+
+
+Estado 70
+
+   59 termo: fator .
+
+    $padrão  reduzir usando a regra 59 (termo)
+
+
+Estado 71
+
+   64 fator: ativacao .
+
+    $padrão  reduzir usando a regra 64 (fator)
+
+
+Estado 72
+
+   37 selecao_decl: IF OPEN_PAREN . expressao CLOSE_PAREN statement
+   38             | IF OPEN_PAREN . expressao CLOSE_PAREN statement ELSE statement
+
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    OPEN_PAREN  deslocar, e ir ao estado 52
+
+    id                 ir ao estado 54
+    num                ir ao estado 56
+    expressao          ir ao estado 101
+    var                ir ao estado 66
+    simples_expressao  ir ao estado 67
+    soma_expressao     ir ao estado 68
+    termo              ir ao estado 69
+    fator              ir ao estado 70
+    ativacao           ir ao estado 71
+
+
+Estado 73
+
+   40 retorno_decl: RETURN SEMICOLON .
+
+    $padrão  reduzir usando a regra 40 (retorno_decl)
+
+
+Estado 74
+
+   41 retorno_decl: RETURN expressao . SEMICOLON
+
+    SEMICOLON  deslocar, e ir ao estado 102
+
+
+Estado 75
+
+    7 var_declaracao: INT id . SEMICOLON
+    8               | INT id . OPEN_BRACKET num CLOSE_BRACKET SEMICOLON
+
+    SEMICOLON     deslocar, e ir ao estado 13
+    OPEN_BRACKET  deslocar, e ir ao estado 15
+
+
+Estado 76
+
+    9 var_declaracao: VOID id . SEMICOLON
+   10               | VOID id . OPEN_BRACKET num CLOSE_BRACKET SEMICOLON
+
+    SEMICOLON     deslocar, e ir ao estado 16
+    OPEN_BRACKET  deslocar, e ir ao estado 18
+
+
+Estado 77
+
+   39 iteracao_decl: WHILE OPEN_PAREN . expressao CLOSE_PAREN statement
+
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    OPEN_PAREN  deslocar, e ir ao estado 52
+
+    id                 ir ao estado 54
+    num                ir ao estado 56
+    expressao          ir ao estado 103
+    var                ir ao estado 66
+    simples_expressao  ir ao estado 67
+    soma_expressao     ir ao estado 68
+    termo              ir ao estado 69
+    fator              ir ao estado 70
+    ativacao           ir ao estado 71
+
+
+Estado 78
+
+   62 fator: OPEN_PAREN expressao . CLOSE_PAREN
+
+    CLOSE_PAREN  deslocar, e ir ao estado 104
+
+
+Estado 79
+
+   66 ativacao: id OPEN_PAREN . arg_lista CLOSE_PAREN
+   67         | id OPEN_PAREN . CLOSE_PAREN
+
+    ID           deslocar, e ir ao estado 8
+    NUM          deslocar, e ir ao estado 24
+    OPEN_PAREN   deslocar, e ir ao estado 52
+    CLOSE_PAREN  deslocar, e ir ao estado 105
+
+    id                 ir ao estado 54
+    num                ir ao estado 56
+    expressao          ir ao estado 106
+    var                ir ao estado 66
+    simples_expressao  ir ao estado 67
+    soma_expressao     ir ao estado 68
+    termo              ir ao estado 69
+    fator              ir ao estado 70
+    ativacao           ir ao estado 71
+    arg_lista          ir ao estado 107
+
+
+Estado 80
+
+   45 var: id OPEN_BRACKET . expressao CLOSE_BRACKET
+
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    OPEN_PAREN  deslocar, e ir ao estado 52
+
+    id                 ir ao estado 54
+    num                ir ao estado 56
+    expressao          ir ao estado 108
+    var                ir ao estado 66
+    simples_expressao  ir ao estado 67
+    soma_expressao     ir ao estado 68
+    termo              ir ao estado 69
+    fator              ir ao estado 70
+    ativacao           ir ao estado 71
+
+
+Estado 81
+
+   23 composto_decl: OPEN_KEYS local_declaracoes CLOSE_KEYS .
+
+    $padrão  reduzir usando a regra 23 (composto_decl)
+
+
+Estado 82
+
+   26 local_declaracoes: local_declaracoes var_declaracao .
+
+    $padrão  reduzir usando a regra 26 (local_declaracoes)
+
+
+Estado 83
+
+   22 composto_decl: OPEN_KEYS local_declaracoes statement_lista . CLOSE_KEYS
+   28 statement_lista: statement_lista . statement
+
+    IF          deslocar, e ir ao estado 46
+    RETURN      deslocar, e ir ao estado 47
+    WHILE       deslocar, e ir ao estado 50
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    SEMICOLON   deslocar, e ir ao estado 51
+    OPEN_PAREN  deslocar, e ir ao estado 52
+    OPEN_KEYS   deslocar, e ir ao estado 37
+    CLOSE_KEYS  deslocar, e ir ao estado 109
+
+    id                 ir ao estado 54
+    num                ir ao estado 56
+    composto_decl      ir ao estado 57
+    statement          ir ao estado 85
+    expressao_decl     ir ao estado 61
+    selecao_decl       ir ao estado 62
+    iteracao_decl      ir ao estado 63
+    retorno_decl       ir ao estado 64
+    expressao          ir ao estado 65
+    var                ir ao estado 66
+    simples_expressao  ir ao estado 67
+    soma_expressao     ir ao estado 68
+    termo              ir ao estado 69
+    fator              ir ao estado 70
+    ativacao           ir ao estado 71
+
+
+Estado 84
+
+   24 composto_decl: OPEN_KEYS statement_lista CLOSE_KEYS .
+
+    $padrão  reduzir usando a regra 24 (composto_decl)
+
+
+Estado 85
+
+   28 statement_lista: statement_lista statement .
+
+    $padrão  reduzir usando a regra 28 (statement_lista)
+
+
+Estado 86
+
+   35 expressao_decl: expressao SEMICOLON .
+
+    $padrão  reduzir usando a regra 35 (expressao_decl)
+
+
+Estado 87
+
+   42 expressao: var ASSIGN . expressao
+
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    OPEN_PAREN  deslocar, e ir ao estado 52
+
+    id                 ir ao estado 54
+    num                ir ao estado 56
+    expressao          ir ao estado 110
+    var                ir ao estado 66
+    simples_expressao  ir ao estado 67
+    soma_expressao     ir ao estado 68
+    termo              ir ao estado 69
+    fator              ir ao estado 70
+    ativacao           ir ao estado 71
+
+
+Estado 88
+
+   49 relacional: LESS_THAN .
+
+    $padrão  reduzir usando a regra 49 (relacional)
+
+
+Estado 89
+
+   48 relacional: LESS_THAN_EQUAL .
+
+    $padrão  reduzir usando a regra 48 (relacional)
+
+
+Estado 90
+
+   50 relacional: GREATER_THAN .
+
+    $padrão  reduzir usando a regra 50 (relacional)
+
+
+Estado 91
+
+   51 relacional: GREATER_THAN_EQUAL .
+
+    $padrão  reduzir usando a regra 51 (relacional)
+
+
+Estado 92
+
+   52 relacional: EQUAL .
+
+    $padrão  reduzir usando a regra 52 (relacional)
+
+
+Estado 93
+
+   53 relacional: NOT_EQUAL .
+
+    $padrão  reduzir usando a regra 53 (relacional)
+
+
+Estado 94
+
+   56 soma: PLUS .
+
+    $padrão  reduzir usando a regra 56 (soma)
+
+
+Estado 95
+
+   57 soma: MINUS .
+
+    $padrão  reduzir usando a regra 57 (soma)
+
+
+Estado 96
+
+   46 simples_expressao: soma_expressao relacional . soma_expressao
+
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    OPEN_PAREN  deslocar, e ir ao estado 52
+
+    id              ir ao estado 54
+    num             ir ao estado 56
+    var             ir ao estado 111
+    soma_expressao  ir ao estado 112
+    termo           ir ao estado 69
+    fator           ir ao estado 70
+    ativacao        ir ao estado 71
+
+
+Estado 97
+
+   54 soma_expressao: soma_expressao soma . termo
+
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    OPEN_PAREN  deslocar, e ir ao estado 52
+
+    id        ir ao estado 54
+    num       ir ao estado 56
+    var       ir ao estado 111
+    termo     ir ao estado 113
+    fator     ir ao estado 70
+    ativacao  ir ao estado 71
+
+
+Estado 98
+
+   60 mult: MULTIPLYER .
+
+    $padrão  reduzir usando a regra 60 (mult)
+
+
+Estado 99
+
+   61 mult: DIVIDER .
+
+    $padrão  reduzir usando a regra 61 (mult)
+
+
+Estado 100
+
+   58 termo: termo mult . fator
+
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    OPEN_PAREN  deslocar, e ir ao estado 52
+
+    id        ir ao estado 54
+    num       ir ao estado 56
+    var       ir ao estado 111
+    fator     ir ao estado 114
+    ativacao  ir ao estado 71
+
+
+Estado 101
+
+   37 selecao_decl: IF OPEN_PAREN expressao . CLOSE_PAREN statement
+   38             | IF OPEN_PAREN expressao . CLOSE_PAREN statement ELSE statement
+
+    CLOSE_PAREN  deslocar, e ir ao estado 115
+
+
+Estado 102
+
+   41 retorno_decl: RETURN expressao SEMICOLON .
+
+    $padrão  reduzir usando a regra 41 (retorno_decl)
+
+
+Estado 103
+
+   39 iteracao_decl: WHILE OPEN_PAREN expressao . CLOSE_PAREN statement
+
+    CLOSE_PAREN  deslocar, e ir ao estado 116
+
+
+Estado 104
+
+   62 fator: OPEN_PAREN expressao CLOSE_PAREN .
+
+    $padrão  reduzir usando a regra 62 (fator)
+
+
+Estado 105
+
+   67 ativacao: id OPEN_PAREN CLOSE_PAREN .
+
+    $padrão  reduzir usando a regra 67 (ativacao)
+
+
+Estado 106
+
+   69 arg_lista: expressao .
+
+    $padrão  reduzir usando a regra 69 (arg_lista)
+
+
+Estado 107
+
+   66 ativacao: id OPEN_PAREN arg_lista . CLOSE_PAREN
+   68 arg_lista: arg_lista . COMMA expressao
+
+    COMMA        deslocar, e ir ao estado 117
+    CLOSE_PAREN  deslocar, e ir ao estado 118
+
+
+Estado 108
+
+   45 var: id OPEN_BRACKET expressao . CLOSE_BRACKET
+
+    CLOSE_BRACKET  deslocar, e ir ao estado 119
+
+
+Estado 109
+
+   22 composto_decl: OPEN_KEYS local_declaracoes statement_lista CLOSE_KEYS .
+
+    $padrão  reduzir usando a regra 22 (composto_decl)
+
+
+Estado 110
+
+   42 expressao: var ASSIGN expressao .
+
+    $padrão  reduzir usando a regra 42 (expressao)
+
+
+Estado 111
+
+   63 fator: var .
+
+    $padrão  reduzir usando a regra 63 (fator)
+
+
+Estado 112
+
+   46 simples_expressao: soma_expressao relacional soma_expressao .
+   54 soma_expressao: soma_expressao . soma termo
+
+    PLUS   deslocar, e ir ao estado 94
+    MINUS  deslocar, e ir ao estado 95
+
+    $padrão  reduzir usando a regra 46 (simples_expressao)
+
+    soma  ir ao estado 97
+
+
+Estado 113
+
+   54 soma_expressao: soma_expressao soma termo .
+   58 termo: termo . mult fator
+
+    MULTIPLYER  deslocar, e ir ao estado 98
+    DIVIDER     deslocar, e ir ao estado 99
+
+    $padrão  reduzir usando a regra 54 (soma_expressao)
+
+    mult  ir ao estado 100
+
+
+Estado 114
+
+   58 termo: termo mult fator .
+
+    $padrão  reduzir usando a regra 58 (termo)
+
+
+Estado 115
+
+   37 selecao_decl: IF OPEN_PAREN expressao CLOSE_PAREN . statement
+   38             | IF OPEN_PAREN expressao CLOSE_PAREN . statement ELSE statement
+
+    IF          deslocar, e ir ao estado 46
+    RETURN      deslocar, e ir ao estado 47
+    WHILE       deslocar, e ir ao estado 50
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    SEMICOLON   deslocar, e ir ao estado 51
+    OPEN_PAREN  deslocar, e ir ao estado 52
+    OPEN_KEYS   deslocar, e ir ao estado 37
+
+    id                 ir ao estado 54
+    num                ir ao estado 56
+    composto_decl      ir ao estado 57
+    statement          ir ao estado 120
+    expressao_decl     ir ao estado 61
+    selecao_decl       ir ao estado 62
+    iteracao_decl      ir ao estado 63
+    retorno_decl       ir ao estado 64
+    expressao          ir ao estado 65
+    var                ir ao estado 66
+    simples_expressao  ir ao estado 67
+    soma_expressao     ir ao estado 68
+    termo              ir ao estado 69
+    fator              ir ao estado 70
+    ativacao           ir ao estado 71
+
+
+Estado 116
+
+   39 iteracao_decl: WHILE OPEN_PAREN expressao CLOSE_PAREN . statement
+
+    IF          deslocar, e ir ao estado 46
+    RETURN      deslocar, e ir ao estado 47
+    WHILE       deslocar, e ir ao estado 50
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    SEMICOLON   deslocar, e ir ao estado 51
+    OPEN_PAREN  deslocar, e ir ao estado 52
+    OPEN_KEYS   deslocar, e ir ao estado 37
+
+    id                 ir ao estado 54
+    num                ir ao estado 56
+    composto_decl      ir ao estado 57
+    statement          ir ao estado 121
+    expressao_decl     ir ao estado 61
+    selecao_decl       ir ao estado 62
+    iteracao_decl      ir ao estado 63
+    retorno_decl       ir ao estado 64
+    expressao          ir ao estado 65
+    var                ir ao estado 66
+    simples_expressao  ir ao estado 67
+    soma_expressao     ir ao estado 68
+    termo              ir ao estado 69
+    fator              ir ao estado 70
+    ativacao           ir ao estado 71
+
+
+Estado 117
+
+   68 arg_lista: arg_lista COMMA . expressao
+
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    OPEN_PAREN  deslocar, e ir ao estado 52
+
+    id                 ir ao estado 54
+    num                ir ao estado 56
+    expressao          ir ao estado 122
+    var                ir ao estado 66
+    simples_expressao  ir ao estado 67
+    soma_expressao     ir ao estado 68
+    termo              ir ao estado 69
+    fator              ir ao estado 70
+    ativacao           ir ao estado 71
+
+
+Estado 118
+
+   66 ativacao: id OPEN_PAREN arg_lista CLOSE_PAREN .
+
+    $padrão  reduzir usando a regra 66 (ativacao)
+
+
+Estado 119
+
+   45 var: id OPEN_BRACKET expressao CLOSE_BRACKET .
+
+    $padrão  reduzir usando a regra 45 (var)
+
+
+Estado 120
+
+   37 selecao_decl: IF OPEN_PAREN expressao CLOSE_PAREN statement .
+   38             | IF OPEN_PAREN expressao CLOSE_PAREN statement . ELSE statement
+
+    ELSE  deslocar, e ir ao estado 123
+
+    ELSE      [reduzir usando a regra 37 (selecao_decl)]
+    $padrão  reduzir usando a regra 37 (selecao_decl)
+
+
+Estado 121
+
+   39 iteracao_decl: WHILE OPEN_PAREN expressao CLOSE_PAREN statement .
+
+    $padrão  reduzir usando a regra 39 (iteracao_decl)
+
+
+Estado 122
+
+   68 arg_lista: arg_lista COMMA expressao .
+
+    $padrão  reduzir usando a regra 68 (arg_lista)
+
+
+Estado 123
+
+   38 selecao_decl: IF OPEN_PAREN expressao CLOSE_PAREN statement ELSE . statement
+
+    IF          deslocar, e ir ao estado 46
+    RETURN      deslocar, e ir ao estado 47
+    WHILE       deslocar, e ir ao estado 50
+    ID          deslocar, e ir ao estado 8
+    NUM         deslocar, e ir ao estado 24
+    SEMICOLON   deslocar, e ir ao estado 51
+    OPEN_PAREN  deslocar, e ir ao estado 52
+    OPEN_KEYS   deslocar, e ir ao estado 37
+
+    id                 ir ao estado 54
+    num                ir ao estado 56
+    composto_decl      ir ao estado 57
+    statement          ir ao estado 124
+    expressao_decl     ir ao estado 61
+    selecao_decl       ir ao estado 62
+    iteracao_decl      ir ao estado 63
+    retorno_decl       ir ao estado 64
+    expressao          ir ao estado 65
+    var                ir ao estado 66
+    simples_expressao  ir ao estado 67
+    soma_expressao     ir ao estado 68
+    termo              ir ao estado 69
+    fator              ir ao estado 70
+    ativacao           ir ao estado 71
+
+
+Estado 124
+
+   38 selecao_decl: IF OPEN_PAREN expressao CLOSE_PAREN statement ELSE statement .
+
+    $padrão  reduzir usando a regra 38 (selecao_decl)

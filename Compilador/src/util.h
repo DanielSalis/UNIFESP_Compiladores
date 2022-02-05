@@ -33,4 +33,6 @@ char * copyString( char * );
  */
 void printTree( TreeNode * );
 
+void aggScope(TreeNode*, char*);
+
 #endif

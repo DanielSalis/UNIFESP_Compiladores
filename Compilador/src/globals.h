@@ -13,6 +13,15 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdbool.h>
+
+#ifndef YYPARSER
+
+#include "parser.tab.h"
+
+#define ENDFILE 0
+
+#endif
 
 #ifndef FALSE
 #define FALSE 0
@@ -25,43 +34,13 @@
 /* MAXRESERVED = the number of reserved words */
 #define MAXRESERVED 8
 
-typedef enum
-/* book-keeping tokens */
-{
-   INT,
-   IF,
-   ELSE,
-   RETURN,
-   VOID,
-   WHILE,
-   ASSIGN,
-   EQUAL,
-   LESS_THAN,
-   LESS_THAN_EQUAL,
-   GREATER_THAN,
-   GREATER_THAN_EQUAL,
-   NOT_EQUAL,
-   OPEN_BRACKET,
-   CLOSE_BRACKET,
-   OPEN_KEYS,
-   CLOSE_KEYS,
-   PLUS,
-   MINUS,
-   MULTIPLYER,
-   DIVIDER,
-   OPEN_PAREN,
-   CLOSE_PAREN,
-   SEMICOLON,
-   COMMA,
-   ID,
-   NUM,
-   ERROR,
-   END
-} TokenType;
+typedef int TokenType;
 
 extern FILE *source;  /* source code text file */
 extern FILE *listing; /* listing output text file */
 extern FILE *code;    /* code text file for TM simulator */
+extern FILE *tokenList;
+extern FILE *synTree;
 
 extern int lineno; /* source line number for listing */
 
@@ -80,13 +59,20 @@ typedef enum
    RepeatK,
    AssignK,
    ReadK,
-   WriteK
+   WriteK,
+   VarK,
+   FuncK,
+   CallK,
+   ReturnK,
+   ParamK,
 } StmtKind;
 typedef enum
 {
    OpK,
    ConstK,
-   IdK
+   IdK,
+   VectK,
+   TypeK,
 } ExpKind;
 
 /* ExpType is used for type checking */
@@ -114,6 +100,7 @@ typedef struct treeNode
    {
       TokenType op;
       int val;
+      int  len;
       char *name;
    } attr;
    ExpType type; /* for type checking of exps */
