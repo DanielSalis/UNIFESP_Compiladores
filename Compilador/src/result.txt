@@ -1,0 +1,101 @@
+
+C SUBTRACT COMPILATION: teste.cms
+	3: Reserved Word: int
+	3: ID: fact
+	3: (
+	3: Reserved Word: int
+	3: ID: x
+	3: )
+	3: {
+	4: Reserved Word: if
+	4: (
+	4: ID: x
+	4: >
+	4: Number: 1
+	4: )
+	5: Reserved Word: return
+	5: ID: x
+	5: *
+	5: ID: fact
+	5: (
+	5: ID: x
+	5: -
+	5: Number: 1
+	5: )
+	5: ;
+	6: Reserved Word: else
+	7: Reserved Word: return
+	7: Number: 1
+	7: ;
+	8: }
+	9: Reserved Word: void
+	9: ID: main
+	9: (
+	9: Reserved Word: void
+	9: )
+	10: {
+	11: Reserved Word: int
+	11: ID: x
+	11: ;
+	12: Reserved Word: if
+	12: (
+	12: ID: x
+	12: >
+	12: Number: 0
+	12: )
+	13: (
+	13: ID: fact
+	13: (
+	13: ID: x
+	13: )
+	13: )
+	13: ;
+	14: }
+	15: EOF
+
+Syntax tree:
+  Type integer
+    Function fact
+      Type integer
+        Variable x
+      If
+        Operation: >
+          Id: x
+          Constant: 1
+        Return
+          Operation: *
+            Id: x
+            Call to Function fact 
+              Operation: -
+                Id: x
+                Constant: 1
+        Return
+          Constant: 1
+  Type void
+    Function main
+      Type void
+      Type integer
+        Variable x
+      If
+        Operation: >
+          Id: x
+          Constant: 0
+        Call to Function fact 
+          Id: x
+
+Building Symbol Table...
+
+Symbol table:
+
+Location        Name       Scope       TypeID       TypeData    Line Numbers
+-------------  --------   ------------ ------------ ------------ ------------
+5        fact            main            call            -                 13 
+3        main            global          function        void               9 
+1        x               fact            variable        integer            3    4    5    5 
+0        fact            global          function        integer            3 
+2        fact            fact            call            -                  5 
+4        x               main            variable        integer           11   12   13 
+
+Checking Types...
+
+Type Checking Finished

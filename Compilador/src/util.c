@@ -1,17 +1,6 @@
-/****************************************************/
-/* File: util.c                                     */
-/* Utility function implementation                  */
-/* for the TINY compiler                            */
-/* Compiler Construction: Principles and Practice   */
-/* Kenneth C. Louden                                */
-/****************************************************/
-
 #include "globals.h"
 #include "util.h"
 
-/* Procedure printToken prints a token 
- * and its lexeme to the listing file
- */
 void printToken(TokenType token, const char *tokenString)
 {
   switch (token)
@@ -40,7 +29,7 @@ void printToken(TokenType token, const char *tokenString)
   case LESS_THAN:
     fprintf(listing, "<\n");
     break;
-  case EQUAL:
+  case EQ:
     fprintf(listing, "==\n");
     break;
   case GREATER_THAN:
@@ -67,10 +56,10 @@ void printToken(TokenType token, const char *tokenString)
   case CLOSE_KEYS:
     fprintf(listing, "}\n");
     break;
-  case OPEN_PAREN:
+  case OPEN_PARENTHESES:
     fprintf(listing, "(\n");
     break;
-  case CLOSE_PAREN:
+  case CLOSE_PARENTHESES:
     fprintf(listing, ")\n");
     break;
   case SEMICOLON:
@@ -79,19 +68,19 @@ void printToken(TokenType token, const char *tokenString)
   case COMMA:
     fprintf(listing, ",\n");
     break;
-  case PLUS:
+  case SUM:
     fprintf(listing, "+\n");
     break;
-  case MINUS:
+  case SUBTRACT:
     fprintf(listing, "-\n");
     break;
-  case MULTIPLYER:
+  case MULTIPLY:
     fprintf(listing, "*\n");
     break;
-  case DIVIDER:
+  case DIVIDE:
     fprintf(listing, "/\n");
     break;
-  case END:
+  case ENDFILE:
     fprintf(listing, "EOF\n");
     break;
   case NUM:
@@ -108,10 +97,117 @@ void printToken(TokenType token, const char *tokenString)
   }
 }
 
-/* Function newStmtNode creates a new statement
- * node for syntax tree construction
- */
-TreeNode *newStmtNode(StmtKind kind)
+void printTokenForError(TokenType token, const char *tokenString)
+{
+  switch (token)
+  {
+  case IF:
+    fprintf(listing, "%s", tokenString);
+    break;
+  case ELSE:
+    fprintf(listing, "%s", tokenString);
+    break;
+  case INT:
+    fprintf(listing, "%s", tokenString);
+    break;
+  case RETURN:
+    fprintf(listing, "%s", tokenString);
+    break;
+  case VOID:
+    fprintf(listing, "%s", tokenString);
+    break;
+  case WHILE:
+    fprintf(listing, "%s", tokenString);
+    break;
+  case ASSIGN:
+    fprintf(listing, "=");
+    break;
+  case LESS_THAN:
+    fprintf(listing, "<");
+    break;
+  case EQ:
+    fprintf(listing, "==");
+    break;
+  case GREATER_THAN:
+    fprintf(listing, ">");
+    break;
+  case LESS_THAN_EQUAL:
+    fprintf(listing, "<=");
+    break;
+  case GREATER_THAN_EQUAL:
+    fprintf(listing, ">=");
+    break;
+  case NOT_EQUAL:
+    fprintf(listing, "!=");
+    break;
+  case OPEN_BRACKET:
+    fprintf(listing, "[");
+    break;
+  case CLOSE_BRACKET:
+    fprintf(listing, "]");
+    break;
+  case OPEN_KEYS:
+    fprintf(listing, "{");
+    break;
+  case CLOSE_KEYS:
+    fprintf(listing, "}");
+    break;
+  case OPEN_PARENTHESES:
+    fprintf(listing, "(");
+    break;
+  case CLOSE_PARENTHESES:
+    fprintf(listing, ")");
+    break;
+  case SEMICOLON:
+    fprintf(listing, ";");
+    break;
+  case COMMA:
+    fprintf(listing, ",");
+    break;
+  case SUM:
+    fprintf(listing, "+");
+    break;
+  case SUBTRACT:
+    fprintf(listing, "-");
+    break;
+  case MULTIPLY:
+    fprintf(listing, "*");
+    break;
+  case DIVIDE:
+    fprintf(listing, "/");
+    break;
+  case ENDFILE:
+    fprintf(listing, "EOF");
+    break;
+  case NUM:
+    fprintf(listing, "%s", tokenString);
+    break;
+  case ID:
+    fprintf(listing, "%s", tokenString);
+    break;
+  case ERROR:
+    fprintf(listing, "%s", tokenString);
+    break;
+  default:
+    fprintf(listing, "%d", token);
+  }
+}
+
+void aggScope(TreeNode *t, char *scope)
+{
+  int i;
+  while (t != NULL)
+  {
+    for (i = 0; i < MAXCHILDREN; ++i)
+    {
+      t->attr.scope = scope;
+      aggScope(t->child[i], scope);
+    }
+    t = t->sibling;
+  }
+}
+
+TreeNode *newStmtNode(StatementKind kind)
 {
   TreeNode *t = (TreeNode *)malloc(sizeof(TreeNode));
   int i;
@@ -122,17 +218,15 @@ TreeNode *newStmtNode(StmtKind kind)
     for (i = 0; i < MAXCHILDREN; i++)
       t->child[i] = NULL;
     t->sibling = NULL;
-    t->nodekind = StmtK;
+    t->nodekind = statementK;
     t->kind.stmt = kind;
     t->lineno = lineno;
+    t->attr.scope = "global";
   }
   return t;
 }
 
-/* Function newExpNode creates a new expression 
- * node for syntax tree construction
- */
-TreeNode *newExpNode(ExpKind kind)
+TreeNode *newExpNode(ExpressionIdentifier kind)
 {
   TreeNode *t = (TreeNode *)malloc(sizeof(TreeNode));
   int i;
@@ -143,17 +237,15 @@ TreeNode *newExpNode(ExpKind kind)
     for (i = 0; i < MAXCHILDREN; i++)
       t->child[i] = NULL;
     t->sibling = NULL;
-    t->nodekind = ExpK;
+    t->nodekind = expressionK;
     t->kind.exp = kind;
     t->lineno = lineno;
-    t->type = Void;
+    t->type = VOID;
+    t->attr.scope = "global";
   }
   return t;
 }
 
-/* Function copyString allocates and makes a new
- * copy of an existing string
- */
 char *copyString(char *s)
 {
   int n;
@@ -169,16 +261,11 @@ char *copyString(char *s)
   return t;
 }
 
-/* Variable indentno is used by printTree to
- * store current number of spaces to indent
- */
 static indentno = 0;
 
-/* macros to increase/decrease indentation */
 #define INDENT indentno += 2
 #define UNINDENT indentno -= 2
 
-/* printSpaces indents by printing spaces */
 static void printSpaces(void)
 {
   int i;
@@ -186,9 +273,6 @@ static void printSpaces(void)
     fprintf(listing, " ");
 }
 
-/* procedure printTree prints a syntax tree to the 
- * listing file using indentation to indicate subtrees
- */
 void printTree(TreeNode *tree)
 {
   int i;
@@ -196,44 +280,61 @@ void printTree(TreeNode *tree)
   while (tree != NULL)
   {
     printSpaces();
-    if (tree->nodekind == StmtK)
+    if (tree->nodekind == statementK)
     {
       switch (tree->kind.stmt)
       {
-      case IfK:
+      case ifK:
         fprintf(listing, "If\n");
         break;
-      case RepeatK:
-        fprintf(listing, "Repeat\n");
+      case assignK:
+        fprintf(listing, "Assign\n");
         break;
-      case AssignK:
-        fprintf(listing, "Assign to: %s\n", tree->attr.name);
+      case whileK:
+        fprintf(listing, "While\n");
         break;
-      case ReadK:
-        fprintf(listing, "Read: %s\n", tree->attr.name);
+      case variableK:
+        fprintf(listing, "Variable %s\n", tree->attr.name);
         break;
-      case WriteK:
-        fprintf(listing, "Write\n");
+      case functionK:
+        fprintf(listing, "Function %s\n", tree->attr.name);
         break;
+      case callK:
+        fprintf(listing, "Call to Function %s \n", tree->attr.name);
+        break;
+      case returnK:
+        fprintf(listing, "Return\n");
+        break;
+
       default:
         fprintf(listing, "Unknown ExpNode kind\n");
         break;
       }
     }
-    else if (tree->nodekind == ExpK)
+    else if (tree->nodekind == expressionK)
     {
       switch (tree->kind.exp)
       {
-      case OpK:
-        fprintf(listing, "Op: ");
+      case operationK:
+        fprintf(listing, "Operation: ");
         printToken(tree->attr.op, "\0");
         break;
-      case ConstK:
-        fprintf(listing, "Const: %d\n", tree->attr.val);
+      case constantK:
+        fprintf(listing, "Constant: %d\n", tree->attr.val);
         break;
-      case IdK:
+      case idK:
         fprintf(listing, "Id: %s\n", tree->attr.name);
         break;
+      case vectorK:
+        fprintf(listing, "Vector: %s\n", tree->attr.name);
+        break;
+      case vectorIdK:
+        fprintf(listing, "Index [%d]\n", tree->attr.val);
+        break;
+      case typeK:
+        fprintf(listing, "Type %s\n", tree->attr.name);
+        break;
+
       default:
         fprintf(listing, "Unknown ExpNode kind\n");
         break;
