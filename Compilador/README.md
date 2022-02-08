@@ -34,6 +34,18 @@
         * K são simbolos na cadeia de entrada
 
 
+### 1.4 - Análisador Semantico
+
+### 1.5 - Análisador Semantico
+* Tabela de símbolos
+    * Nada mais é do que uma tabela hash, foi preciso de uma função hash responsavel por calcular e consultar os endereços e posicições de inserção de novos elementos.
+    * Em serguida foi necessário as struct LineListRec. É uma lista encadeada para armazenar as linhas das ocorrencias dos símbolos da linguagem
+    * temos também a lista de blocos representada pela struct BucketListRec com informações de nome escopo tipo e ponteiro pro proximo elemento
+    temos também a função stInsert para inserir novos elementos na tabela caso não tenham sido propriamente inseridos (é feita uma verificação (while), caso o elemento é adicionado com todas as informações necessárias, caso tenha sido salvo na tabela, somente o número da linha é salvo
+    * statementFinder, consulta a tabela de símbolos e retorna o número de localização da memória ou -1 caso elemento não encontrado
+    * statementFinderType, consulta a tabela para encontrar o typeData
+    * printSymTab imprimir a tabela na tela de acordo com as especificações (nome... escopo... id... linhas)
+
 ## 2 - Instruções de instalação
 ```bash
 > sudo apt update
