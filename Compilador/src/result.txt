@@ -1,5 +1,5 @@
 
-C SUBTRACT COMPILATION: teste.cms
+INICIANDO COMPILAÇÃO: teste.cminus
 	3: Reserved Word: int
 	3: ID: fact
 	3: (
@@ -50,8 +50,12 @@ C SUBTRACT COMPILATION: teste.cms
 	13: )
 	13: )
 	13: ;
-	14: }
-	15: EOF
+	15: ID: calculate
+	15: (
+	15: )
+	15: ;
+	16: }
+	17: EOF
 
 Syntax tree:
   Type integer
@@ -82,19 +86,20 @@ Syntax tree:
           Constant: 0
         Call to Function fact 
           Id: x
+      Call to Function calculate 
 
 Building Symbol Table...
+ERRO SEMÂNTICO: calculate LINHA 15: MENSAGEM: Chamada de função inválida.
 
-Symbol table:
-
-Location        Name       Scope       TypeID       TypeData    Line Numbers
--------------  --------   ------------ ------------ ------------ ------------
-5        fact            main            call            -                 13 
-3        main            global          function        void               9 
-1        x               fact            variable        integer            3    4    5    5 
-0        fact            global          function        integer            3 
-2        fact            fact            call            -                  5 
-4        x               main            variable        integer           11   12   13 
+Tabela de Símbolo:
+NOME          ESCOPO           TIPO_ID         TIPO_DATA         LINHAS
+--------      ------------     ------------    ------------      ------------
+fact            main            call            -                 13 
+main            global          function        void               9 
+x               fact            variable        integer            3    4    5    5 
+fact            global          function        integer            3 
+fact            fact            call            -                  5 
+x               main            variable        integer           11   12   13 
 
 Checking Types...
 
