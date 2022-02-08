@@ -10,6 +10,30 @@
 * Nota: A função yylex() é a principal função flex que executa a Seção de Regras e a extensão (.l) é a extensão usada para salvar os programas.
 
 
+### 1.3 - Análisador sintático
+* A análise sintática(parsing) utiliza os tokens produzifos pelo analisador léxico
+* Produz uma árvore de análise sintática (onde representa a estrutura gramatical do fluxo de tokens)
+* Existem duas formas de se reconhecer uma linguagem através de uma gramática
+    * Inferência recursiva
+        * Dada uma cadeia (conjunto de símbolos terminais)
+        * Tem o fluxo do corpo para cabeça
+    * Derivação
+        * Dada uma cadeia (conjunto de símbolos terminais)
+        * Tem o fluxo da cabeça para o corpo
+
+* De acordo com a teoria um analisador sintático é igual a um autômato de pilha
+    * Análise sintática descendente
+        * método que produz uma derivação mais à esquerda para uma cadeia de entrada
+        * o problema principal em cada passo é determinar qual produção aplicar
+        * tokens são lidos da direita para a esquerda
+    * Análise sintática ascendente
+        * yacc
+        * analisador LR(K)
+        * Lê a sentencça da esquerda para a direita 
+        * produz uma derivação mais à direita
+        * K são simbolos na cadeia de entrada
+
+
 ## 2 - Instruções de instalação
 ```bash
 > sudo apt update
