@@ -61,7 +61,7 @@ static void insertNode(TreeNode *t)
 		{
 		case variableK:
 			if (statementFinder(t->attr.name, t->attr.scope) == -1 && statementFinder(t->attr.name, "global") == -1)
-				st_insert(t->attr.name, t->lineno, location++, t->attr.scope, "variable", "integer");
+				stInsert(t->attr.name, t->lineno, location++, t->attr.scope, "variable", "integer");
 			else
 				printSemanticError(t, "Variável já foi declarada.");
 			break;
@@ -69,9 +69,9 @@ static void insertNode(TreeNode *t)
 			if (statementFinder(t->attr.name, t->attr.scope) == -1 && statementFinder(t->attr.name, "global") == -1)
 			{
 				if (t->type == integerK)
-					st_insert(t->attr.name, t->lineno, location++, t->attr.scope, "function", "integer");
+					stInsert(t->attr.name, t->lineno, location++, t->attr.scope, "function", "integer");
 				else
-					st_insert(t->attr.name, t->lineno, location++, t->attr.scope, "function", "void");
+					stInsert(t->attr.name, t->lineno, location++, t->attr.scope, "function", "void");
 			}
 			else
 				printSemanticError(t, "Função já foi declarada.");
@@ -80,7 +80,7 @@ static void insertNode(TreeNode *t)
 			if (statementFinder(t->attr.name, t->attr.scope) == -1 && statementFinder(t->attr.name, "global") == -1)
 				printSemanticError(t, "Chamada de função inválida.");
 			else
-				st_insert(t->attr.name, t->lineno, location++, t->attr.scope, "call", "-");
+				stInsert(t->attr.name, t->lineno, location++, t->attr.scope, "call", "-");
 		case returnK:
 			break;
 		default:
@@ -94,19 +94,19 @@ static void insertNode(TreeNode *t)
 			if (statementFinder(t->attr.name, t->attr.scope) == -1 && statementFinder(t->attr.name, "global") == -1)
 				printSemanticError(t, "Expressão não foi declarada.");
 			else
-				st_insert(t->attr.name, t->lineno, 0, t->attr.scope, "variable", "integer");
+				stInsert(t->attr.name, t->lineno, 0, t->attr.scope, "variable", "integer");
 			break;
 		case vectorK:
 			if (statementFinder(t->attr.name, t->attr.scope) == -1 && statementFinder(t->attr.name, "global") == -1)
 				printSemanticError(t, "Expressão não foi declarada.");
 			else
-				st_insert(t->attr.name, t->lineno, 0, t->attr.scope, "vector", "integer");
+				stInsert(t->attr.name, t->lineno, 0, t->attr.scope, "vector", "integer");
 			break;
 		case vectorIdK:
 			if (statementFinder(t->attr.name, t->attr.scope) == -1 && statementFinder(t->attr.name, "global") == -1)
 				printSemanticError(t, "Expressão não foi declarada.");
 			else
-				st_insert(t->attr.name, t->lineno, 0, t->attr.scope, "vector index", "integer");
+				stInsert(t->attr.name, t->lineno, 0, t->attr.scope, "vector index", "integer");
 		case typeK:
 			break;
 		default:

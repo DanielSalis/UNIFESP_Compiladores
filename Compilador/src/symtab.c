@@ -45,7 +45,7 @@ typedef struct BucketListRec
 
 static BucketList hashTable[SIZE];
 
-void st_insert( char * name, int lineno, int loc, char* scope, 
+void stInsert( char * name, int lineno, int loc, char* scope, 
 		char* typeID, char* typeData)
 { 
  
