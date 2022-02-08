@@ -38,6 +38,15 @@
 ```bash
 > sudo apt update
 > sudo apt install build-essential
-> sudo apt-get install flex
+> sudo apt-get install flex-old
 > sudo apt-get install bison
+```
+
+## 3 - Executando
+```bash
+flex scanner.l
+bison -d parser.y
+gcc -c *.c
+gcc -o cminus *.o -lfl
+./cminus <arquivo.cminus>
 ```
