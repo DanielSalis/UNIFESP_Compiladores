@@ -1,9 +1,3 @@
-/****************************************************/
-/* File: parse.h                                    */
-/* The parser interface for the C- compiler         */
-/* Rodrigo de Farias Ramires                        */
-/****************************************************/
-
 #ifndef _PARSE_H_
 #define _PARSE_H_
 
