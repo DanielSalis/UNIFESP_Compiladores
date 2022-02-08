@@ -60,7 +60,7 @@ main(int argc, char *argv[])
   source = fopen(pgm, "r");
   if (source == NULL)
   {
-    fprintf(stderr, "File %s not found\n", pgm);
+    fprintf(stderr, "Arquivo %s não encontrado\n", pgm);
     exit(1);
   }
   listing = stdout; /* send listing to screen */
@@ -72,20 +72,20 @@ main(int argc, char *argv[])
   syntaxTree = parse();
   if (TraceParse)
   {
-    fprintf(listing, "\nSyntax tree:\n");
+    fprintf(listing, "\nÁrvore sintática:\n");
     printTree(syntaxTree);
   }
 #if !NO_ANALYZE
   if (!Error)
   {
     if (TraceAnalyze)
-      fprintf(listing, "\nBuilding Symbol Table...\n");
+      fprintf(listing, "\nCriando tabela de símbolos...\n");
     buildSymtab(syntaxTree);
     if (TraceAnalyze)
-      fprintf(listing, "\nChecking Types...\n");
+      fprintf(listing, "\nInício da verificação de tipos...\n");
     typeCheck(syntaxTree);
     if (TraceAnalyze)
-      fprintf(listing, "\nType Checking Finished\n");
+      fprintf(listing, "\nFim da verificação de tipos\n");
   }
 #if !NO_CODE
   if (!Error)
